@@ -1,0 +1,80 @@
+#include <iostream>
+#include<string>
+#include<map>
+#include <vector>
+#include<algorithm>
+using namespace std;
+
+int main() {
+	int countOfActions;
+	cin >> countOfActions;
+	vector<string> busOrder;
+	map<string, vector<string>> buses;
+	for (int i = 0; i < countOfActions; ++i) {
+		string action;
+		cin >> action;
+		if (action == "NEW_BUS") {
+			string name;
+			int stopsCount;
+			cin >> name >> stopsCount;
+			for (int k = 0; k < stopsCount; ++k) {
+				string stopName;
+				cin >> stopName;
+				buses[name].push_back(stopName);
+			}
+			busOrder.push_back(name);
+		}
+		else if(action=="BUSES_FOR_STOP"){
+			string stopName;
+			cin >> stopName;
+			int counter = 0;
+			for (const auto& bus : busOrder) {
+				if (find(buses[bus].begin(), buses[bus].end(), stopName) != buses[bus].end()) {
+					counter++;
+					cout << bus << " ";
+				}
+			}
+			if (counter == 0) {
+				cout << "No stop";
+			}
+			cout << endl;
+		}
+		else if (action == "STOPS_FOR_BUS") {
+			string busName;
+			cin >> busName;
+			if (buses.find(busName) != buses.end()) {
+				for (const auto& stop : buses[busName]) {
+					int counter = 0;
+					cout << "Stop " << stop << ": ";
+					for (const auto& bus : busOrder) {
+						if (bus != busName && find(buses[bus].begin(), buses[bus].end(), stop) != buses[bus].end()) {
+							counter++;
+							cout << bus << " ";
+						}
+					}
+					if (counter == 0) {
+						cout << "no interchange";
+					}
+					cout << endl;
+				}
+			}
+			else {
+				cout << "No bus" << endl;
+			}
+		}
+		else if (action == "ALL_BUSES") {
+			if (buses.size() != 0) {
+				for (const auto& bus : buses) {
+					cout << "Bus " << bus.first << ": ";
+					for (const auto& stop : bus.second) {
+						cout << stop << " ";
+					}
+					cout << endl;
+				}
+			}
+			else {
+				cout << "No buses" << endl;
+			}
+		}
+	}
+}
