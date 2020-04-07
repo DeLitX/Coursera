@@ -1,0 +1,28 @@
+#include <iostream>
+#include<string>
+#include<map>
+#include <vector>
+using namespace std;
+
+int main() {
+	int countOfPairs;
+	cin >> countOfPairs;
+	for (int i = 0; i < countOfPairs; ++i) {
+		string a, b;
+		cin >> a >> b;
+		map<char, int> letters1;
+		for (const char& letter : a) {
+			++letters1[letter];
+		}
+		map<char, int> letters2;
+		for (const char& letter : b) {
+			++letters2[letter];
+		}
+		if (letters1 == letters2) {
+			cout << "YES" << endl;
+		}
+		else {
+			cout << "NO" << endl;
+		}
+	}
+}
