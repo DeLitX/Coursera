@@ -1,0 +1,65 @@
+#include <iostream>
+#include<string>
+#include<map>
+#include <vector>
+using namespace std;
+
+int main() {
+	int countOfActions;
+	cin >> countOfActions;
+	map<string, string> countries;
+	for (int i = 0; i < countOfActions; i++) {
+		string action;
+		cin >> action;
+		if (action == "DUMP") {
+			if (countries.size() == 0) {
+				cout << "There are no countries in the world";
+			}
+			else {
+				for (const auto& country : countries) {
+					cout << country.first << "/" << country.second<<" ";
+				}
+			}
+		}
+		else if (action == "CHANGE_CAPITAL") {
+			string country, newCapital;
+			cin >> country >> newCapital;
+			if (countries[country] == "") {
+				cout << "Introduce new country " << country << " with capital " << newCapital;
+				countries[country] = newCapital;
+			}
+			else if(countries[country]==newCapital){
+				cout << "Country " << country << " hasn't changed its capital";
+			}
+			else {
+				cout << "Country " << country << " has changed its capital from " << countries[country] << " to " << newCapital;
+				countries[country] = newCapital;
+			}
+		}
+		else if (action == "RENAME") {
+			string oldName, newName;
+			cin >> oldName >> newName;
+			bool a = countries.find(oldName) == countries.end();
+			bool b = countries.find(newName) != countries.end();
+			if (a||b ||oldName==newName) {
+				cout << "Incorrect rename, skip";
+			}
+			else {
+				countries[newName] = countries[oldName];
+				countries.erase(oldName);
+				cout << "Country " << oldName << " with capital " << countries[newName] << " has been renamed to " << newName;
+			}
+		}
+		else if (action == "ABOUT") {
+			string country;
+			cin >> country;
+			if (countries.find(country) == countries.end()) {
+				cout << "Country " << country << " doesn't exist";
+			}
+			else {
+				cout << "Country " << country << " has capital " << countries[country];
+			}
+		}
+		cout << endl;
+	}
+}
