@@ -1,0 +1,7 @@
+set<string> BuildMapValuesSet(const map<int, string>& m) {
+	set<string> values;
+	for (const auto& a : m) {
+		values.insert(a.second);
+	}
+	return values;
+}
