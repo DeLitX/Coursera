@@ -1,0 +1,19 @@
+#include <iostream>
+#include<string>
+#include<map>
+#include <vector>
+#include<algorithm>
+#include <set>
+using namespace std;
+
+int main() {
+	int countOfActions;
+	cin >> countOfActions;
+	set<string> words;
+	for (int i = 0; i < countOfActions; ++i) {
+		string temp;
+		cin >> temp;
+		words.insert(temp);
+	}
+	cout << words.size();
+}
