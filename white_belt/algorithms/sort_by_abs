@@ -1,0 +1,23 @@
+#include <iostream>
+#include<string>
+#include<map>
+#include <vector>
+#include<algorithm>
+#include<set>
+#include<cmath>
+using namespace std;
+
+int main() {
+	int countOfActions;
+	cin >> countOfActions;
+	vector<int> numbers;
+	for (int i = 0; i < countOfActions; ++i) {
+		int number;
+		cin >> number;
+		numbers.push_back(number);
+	}
+	sort(numbers.begin(), numbers.end(), [](int x, int y) {return fabs(x) < fabs(y); });
+	for (auto i : numbers) {
+		cout << i<<" ";
+	}
+}
