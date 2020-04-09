@@ -1,0 +1,65 @@
+#include <iostream>
+#include<string>
+#include<map>
+#include <vector>
+#include<algorithm>
+#include<set>
+#include<cmath>
+#include<cstring>
+class Person {
+public:
+    void ChangeFirstName(int year, const string& first_name) {
+        if (years.find(year) == years.end()) {
+            years[year] = { first_name,"" };
+        }
+        else {
+            years[year] = { first_name,years[year].second };
+        }
+    }
+    void ChangeLastName(int year, const string& last_name) {
+        if (years.find(year) == years.end()) {
+            years[year] = { "",last_name };
+        }
+        else {
+            years[year] = { years[year].first,last_name };
+        }
+    }
+    string GetFullName(int year) {
+        string a;
+        string b = getPreviousName(year);
+        string c = getPreviousSurname(year);
+        if (b == "" && c == "") {
+            a = "Incognito";
+        }
+        else if (c == "") {
+            a = b + " with unknown last name";
+        }
+        else if (b == "") {
+            a = c + " with unknown first name";
+        }
+        else {
+            a = b + " " + c;
+        }
+        return a;
+    }
+private:
+    string getPreviousName(int year) {
+        string name = "";
+        for (auto a : years) {
+            if (a.first <= year && a.second.first != "") {
+                name = a.second.first;
+            }
+        }
+        return name;
+    }
+    string getPreviousSurname(int year) {
+        string surname = "";
+        for (auto a : years) {
+            if (a.first <= year && a.second.second != "") {
+                surname = a.second.second;
+            }
+        }
+        return surname;
+    }
+    map <int, pair<string, string>> years;
+};
