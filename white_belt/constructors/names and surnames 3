@@ -1,0 +1,190 @@
+#include <iostream>
+#include<string>
+#include<map>
+#include <vector>
+#include<algorithm>
+#include<set>
+#include<cmath>
+#include<cstring>
+using namespace std;
+
+class Person {
+public:
+    Person(string name, string surname, int year) {
+        years[year] = { name,surname };
+        birthYear = year;
+    }
+    void ChangeFirstName(int year, const string& first_name) {
+        if (year >= birthYear) {
+            if (years.find(year) == years.end()) {
+                years[year] = { first_name,"" };
+            }
+            else {
+                years[year] = { first_name,years[year].second };
+            }
+        }
+    }
+    void ChangeLastName(int year, const string& last_name) {
+        if (year >= birthYear) {
+            if (years.find(year) == years.end()) {
+                years[year] = { "",last_name };
+            }
+            else {
+                years[year] = { years[year].first,last_name };
+            }
+        }
+    }
+    string GetFullName(int year) const {
+        if (year >= birthYear) {
+            string a;
+            string b = getPreviousName(year);
+            string c = getPreviousSurname(year);
+            if (b == "" && c == "") {
+                a = "Incognito";
+            }
+            else if (c == "") {
+                a = b + " with unknown last name";
+            }
+            else if (b == "") {
+                a = c + " with unknown first name";
+            }
+            else {
+                a = b + " " + c;
+            }
+            return a;
+        }
+        else {
+            return "No person";
+        }
+    }
+    string GetFullNameWithHistory(int year) const {
+        if (year >= birthYear) {
+            string final = "";
+            string name = getPreviousName(year);
+            string surname = getPreviousSurname(year);
+            if (name == "" && surname == "") {
+                final = "Incognito";
+            }
+            else if (surname == "") {
+                final = name + getAllPreviousNames(year) + " with unknown last name";
+            }
+            else if (name == "") {
+                final = surname + getAllPreviousSurnames(year) + " with unknown first name";
+            }
+            else {
+                final = name + getAllPreviousNames(year) + " " + surname + getAllPreviousSurnames(year);
+            }
+            return final;
+        }
+        else {
+            return "No person";
+        }
+    }
+private:
+    void clearFromNearDuplicates(vector<string>& a) const {
+        for (int i = 1; i < a.size(); i++) {
+            if (a[i - 1] == a[i]) {
+                a.erase(a.begin() + i);
+                i--;
+            }
+        }
+    }
+    string getAllPreviousNames(int year) const {
+        string result = "";
+        vector<string> names;
+        for (auto a : years) {
+            if (a.first < year && a.second.first != "") {
+                if (names.size() == 0) {
+                    names.push_back(a.second.first);
+                }
+                else {
+                    if (a.second.first != names[names.size() - 1]) {
+                        names.push_back(a.second.first);
+                    }
+                }
+            }
+        }
+        if (names.size() == 0) {
+            return result;
+        }
+        clearFromNearDuplicates(names);
+        if (names[names.size() - 1] == getPreviousName(year)) {
+            names.erase(names.end() - 1);
+        }
+        if (names.size() == 0) {
+            return result;
+        }
+        else {
+            result += " (";
+            for (int i = names.size() - 1; i >= 0; i--) {
+                if (i == 0) {
+                    result += names[i] + ")";
+                }
+                else {
+                    result += names[i] + ", ";
+                }
+
+            }
+            return result;
+        }
+    }
+    string getAllPreviousSurnames(int year) const {
+        string result = "";
+        vector<string> surnames;
+        for (auto a : years) {
+            if (a.first < year && a.second.second != "") {
+                if (surnames.size() == 0) {
+                    surnames.push_back(a.second.second);
+                }
+                else {
+                    if (a.second.first != surnames[surnames.size() - 1]) {
+                        surnames.push_back(a.second.second);
+                    }
+                }
+            }
+        }
+        if (surnames.size() == 0) {
+            return result;
+        }
+        clearFromNearDuplicates(surnames);
+        if (surnames[surnames.size() - 1] == getPreviousSurname(year)) {
+            surnames.erase(surnames.end() - 1);
+        }
+        if (surnames.size() == 0) {
+            return result;
+        }
+        else {
+            result += " (";
+            for (int i = surnames.size() - 1; i >= 0; i--) {
+                if (i == 0) {
+                    result += surnames[i] + ")";
+                }
+                else {
+                    result += surnames[i] + ", ";
+                }
+
+            }
+            return result;
+        }
+    }
+    string getPreviousName(int year) const {
+        string name = "";
+        for (auto a : years) {
+            if (a.first <= year && a.second.first != "") {
+                name = a.second.first;
+            }
+        }
+        return name;
+    }
+    string getPreviousSurname(int year) const {
+        string surname = "";
+        for (auto a : years) {
+            if (a.first <= year && a.second.second != "") {
+                surname = a.second.second;
+            }
+        }
+        return surname;
+    }
+    map <int, pair<string, string>> years;
+    int birthYear;
+};
