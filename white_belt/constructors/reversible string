@@ -1,0 +1,33 @@
+#include <iostream>
+#include<string>
+#include<map>
+#include <vector>
+#include<algorithm>
+#include<set>
+#include<cmath>
+#include<cstring>
+using namespace std;
+
+class ReversibleString {
+public:
+    ReversibleString() {
+        str = "";
+    }
+    ReversibleString(string a) {
+        str = a;
+    }
+    void Reverse() {
+        if (str.size() != 0) {
+            string a = "";
+            for (int i = str.size() - 1; i >= 0; i--) {
+                a += str[i];
+            }
+            str = a;
+        }
+    }
+    string ToString() const {
+        return str;
+    }
+private:
+    string str;
+};
