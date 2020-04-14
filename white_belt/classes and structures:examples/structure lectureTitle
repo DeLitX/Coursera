@@ -1,0 +1,36 @@
+#include <iostream>
+#include<string>
+#include<map>
+#include <vector>
+#include<algorithm>
+#include<set>
+#include<cmath>
+#include<cstring>
+struct Specialization {
+    string value;
+    explicit Specialization(string newValue) {
+        value = newValue;
+    }
+};
+struct Course {
+    string value;
+    explicit Course(string newValue) {
+        value = newValue;
+    }
+};
+struct Week {
+    string value;
+    explicit Week(string newValue) {
+        value = newValue;
+    }
+};
+struct LectureTitle {
+    string specialization;
+    string course;
+    string week;
+    explicit LectureTitle(Specialization newSpecialization, Course newCourse, Week newWeek) {
+        specialization = newSpecialization.value;
+        course = newCourse.value;
+        week = newWeek.value;
+    }
+};
