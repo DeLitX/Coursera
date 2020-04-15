@@ -1,0 +1,23 @@
+//1
+int main() {
+    ifstream input("input.txt");
+    string text;
+    while (getline(input, text)) {
+        cout<< text <<endl;
+        //input.ignore(1);
+    }
+    return 0;
+}
+//
+//2
+//
+int main() {
+    ifstream input("input.txt");
+    ofstream output("output.txt");
+    string text;
+    while (getline(input, text)) {
+        output<< text <<endl;
+        //input.ignore(1);
+    }
+    return 0;
+}
