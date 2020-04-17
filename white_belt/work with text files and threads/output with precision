@@ -1,0 +1,10 @@
+int main() {
+    string a;
+    double number;
+    ifstream input("input.txt");
+    while (input>>number) {
+        cout << fixed << setprecision(3);
+        cout<< number <<endl;
+    }
+    return 0;
+}
