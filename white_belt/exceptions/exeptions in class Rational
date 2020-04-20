@@ -1,0 +1,112 @@
+#include <iostream>
+#include<algorithm>
+#include <cmath>
+#include <exception>
+using namespace std;
+int gcd(int first, int second) {
+    int a = fabs(first), b = fabs(second);
+    if (a == b) {
+        return a;
+    }
+    if (a > b) {
+        int tmp = a;
+        a = b;
+        b = tmp;
+    }
+    return gcd(a, b - a);
+}
+int lcm(int a, int b) {
+    return a * b / gcd(a, b);
+}
+class Rational {
+public:
+    Rational() {
+        numerator = 0;
+        denominator = 1;
+    }
+
+    Rational(int a, int b) {
+        if (b == 0) {
+            throw invalid_argument("");
+        }
+        int numerator = 0, denominator = 1;
+        if ((a >= 0 && b > 0) || (a < 0 && b>0)) {
+            numerator = a;
+            denominator = b;
+        }
+        else if ((a < 0 && b < 0) || (a >= 0 && b < 0)) {
+            numerator = -a;
+            denominator = -b;
+        }
+        if (numerator != 0) {
+            int temp = gcd(numerator, denominator);
+            numerator /= temp;
+            denominator /= temp;
+            this->numerator = numerator;
+            this->denominator = denominator;
+        }
+        else {
+            this->numerator = 0;
+            this->denominator = 1;
+        }
+
+    }
+
+    int Numerator() const {
+        return numerator;
+    }
+
+    int Denominator() const {
+        return denominator;
+    }
+
+private:
+
+    int numerator;
+    int denominator;
+};
+bool operator==(const Rational& a, const Rational& b) {
+    return a.Denominator() == b.Denominator() && a.Numerator() == b.Numerator();
+}
+Rational& operator+(const Rational& a, const Rational& b) {
+    int temp = lcm(a.Denominator(), b.Denominator());
+    int temp1 = temp / a.Denominator();
+    int temp2 = temp / b.Denominator();
+    Rational temp3 = Rational(a.Numerator() * temp1 + b.Numerator() * temp2, temp);
+    return temp3;
+}
+Rational& operator-(const Rational& a, const Rational& b) {
+    int temp = lcm(a.Denominator(), b.Denominator());
+    int temp1 = temp / a.Denominator();
+    int temp2 = temp / b.Denominator();
+    Rational temp3 = Rational(a.Numerator() * temp1 - b.Numerator() * temp2, temp);
+    return temp3;
+}
+Rational& operator*(const Rational& a, const Rational& b) {
+    Rational temp = Rational(a.Numerator() * b.Numerator(), a.Denominator() * b.Denominator());
+    return temp;
+}
+Rational& operator/(const Rational& a, const Rational& b) {
+    if (b.Numerator() == 0) {
+        throw  domain_error("");
+    }
+    Rational temp = Rational(a.Numerator() * b.Denominator(), a.Denominator() * b.Numerator());
+    return temp;
+}
+ostream& operator<<(ostream& stream, const Rational& a) {
+    stream << a.Numerator() << "/" << a.Denominator();
+    return stream;
+}
+istream& operator>>(istream& stream, Rational& a) {
+    int num, den;
+    stream >> num;
+    stream.ignore(1);
+    stream >> den;
+    Rational b(num, den);
+    a = b;
+    return stream;
+}
+bool operator<(const Rational& a, const Rational& b) {
+    int temp = lcm(a.Denominator(), b.Denominator());
+    return a.Numerator() * (temp / a.Denominator()) < b.Numerator() * (temp / b.Denominator());
+}
