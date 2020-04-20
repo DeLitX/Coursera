@@ -1,0 +1,235 @@
+#include <iostream>
+#include<string>
+#include<cstring>
+#include<fstream>
+#include <iomanip>
+#include<vector>
+#include<set>
+#include<map>
+#include <algorithm>
+#include <sstream>
+#include<exception>
+using namespace std;
+
+class Date {
+public:
+    Date(int year, int month, int day) {
+        this->year = year;
+        this->month = month;
+        this->day = day;
+    }
+    int GetYear() const {
+        return year;
+    }
+    int GetMonth() const {
+        return month;
+    }
+    int GetDay() const {
+        return day;
+    }
+private :
+    int year;
+    int month;
+    int day;
+};
+
+bool operator<(const Date& lhs, const Date& rhs) {
+    return lhs.GetDay()+lhs.GetMonth()*31+lhs.GetYear()*31*12<rhs.GetDay()+rhs.GetMonth()*31+rhs.GetYear()*31*12;
+}
+
+class Database {
+public:
+    Database() {}
+    void AddEvent(const Date& date, const string& event) {
+        if (find(events[date].begin(), events[date].end(), event) == events[date].end()) {
+            events.at(date).push_back(event);
+        }
+    }
+    bool DeleteEvent(const Date& date, const string& event) {
+        if (events.find(date) != events.end()) {
+            int size = events.at(date).size();
+            events.at(date).erase(remove(events.at(date).begin(), events.at(date).end(), event), events.at(date).end());
+            if (events.at(date).size() != size) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        else {
+            return false;
+        }
+    }
+    int  DeleteDate(const Date& date) {
+        if (events.find(date) != events.end()) {
+            int size = events.at(date).size();
+            events.erase(date);
+            return size;
+        }
+        else {
+            return 0;
+        }
+    }
+
+    vector<string> Find(const Date& date) const {
+        if (events.find(date) != events.end()) {
+            vector <string>a = events.at(date);
+            return a;
+        }
+        else {
+            return {};
+        }
+    }
+
+    void Print() const {
+        for (auto a : events) {
+            sort(a.second.begin(), a.second.end());
+            for (auto b : a.second) {
+                cout.fill('0');
+                cout <<setw(4)<< a.first.GetYear() << "-" << setw(2) << a.first.GetMonth() << "-" << setw(2) << a.first.GetDay() << " " << b << endl;
+            }
+        }
+    }
+private :
+    map<Date, vector<string>> events;
+};
+Date readDate(string a) {
+    istringstream iss(a);
+    int year, month, day;
+    char defis, defis1;
+    vector<string> b;
+    bool addMinus = false;
+    while (iss) {
+        string temp;
+        getline(iss, temp,'-');
+        if (addMinus) {
+            temp = "-" + temp;
+            addMinus = false;
+        }
+        if (temp[0] == '+') {
+            temp.erase(temp.begin());
+        }
+        while (temp.size() > 1 && temp[0] == '0') {
+            temp.erase(temp.begin());
+        }
+        if (temp == "") {
+            addMinus = true;
+        }
+        else {
+            b.push_back(temp);
+        }
+    }
+    if (b[b.size() - 1] == "" || b[b.size() - 1] == "\n") {
+        b.erase(b.begin()+b.size() - 1);
+    }
+    if (b.size() != 3) {
+        cout << "Wrong date format: " << a << endl;
+        return { 0,0,0 };
+    }try {
+        year = stoi(b[0]);
+        month = stoi(b[1]);
+        day = stoi(b[2]);
+    }
+    catch (exception e) {
+        cout << "Wrong date format: " << a << endl;
+        return { 0,0,0 };
+    }
+    if (to_string(year) != b[0] || to_string(month) != b[1] || to_string(day) != b[2]) {
+        cout << "Wrong date format: " << a << endl;
+        return { 0,0,0 };
+    }
+    if (month > 12 || month < 1) {
+        cout << "Month value is invalid: " << month << endl;
+        return{ 0,0,0 };
+    }
+    else if (day > 31 || day < 1) {
+        cout << "Day value is invalid: " << day << endl;
+        return{ 0,0,0 };
+    }
+    return{ year,month,day };
+}
+
+int main() {
+    Database db;
+
+    string command;
+    while (getline(cin, command)) {
+            istringstream iss(command);
+            vector<string> commands;
+            do
+            {
+                string subs;
+                iss >> subs;
+                commands.push_back(subs);
+            } while (iss);
+            if (commands[commands.size() - 1] == "\n" || commands[commands.size() - 1] == "") {
+                commands.erase(commands.begin() + commands.size() - 1);
+            }
+            if (commands.size() == 3) {
+                
+                if (commands[0] == "Add") {
+                    Date a = readDate(commands[1]);
+                    if (a.GetDay() == 0 && a.GetMonth() == 0 && a.GetYear() == 0) {
+                        return 0;
+                    }
+                        db.AddEvent(a, commands[2]);
+                }
+                else if (commands[0] == "Del") {
+                    Date a = readDate(commands[1]);
+                    if (a.GetDay() == 0 && a.GetMonth() == 0 && a.GetYear() == 0) {
+                        return 0;
+                    }
+                    if (db.DeleteEvent(a, commands[2])) {
+                        cout << "Deleted successfully" << endl;
+                    }
+                    else {
+                        cout << "Event not found" << endl;
+                    }
+                }
+                else {
+                    cout << "Unknown command: " << commands[0] << endl;
+                    return 0;
+                }
+            }
+            else if (commands.size() == 2) {
+                
+                if (commands[0] == "Del")
+                {
+                    Date a = readDate(commands[1]);
+                    if (a.GetDay() == 0 && a.GetMonth() == 0 && a.GetYear() == 0) {
+                        return 0;
+                    }
+                    cout << "Deleted " << db.DeleteDate(a) << " events" << endl;
+                }
+                else if (commands[0] == "Find") {
+                    Date a = readDate(commands[1]);
+                    if (a.GetDay() == 0 && a.GetMonth() == 0 && a.GetYear() == 0) {
+                        return 0;
+                    }
+                    vector<string> c = db.Find(a);
+                    sort(c.begin(), c.end());
+                    for (const auto& b : c) {
+                        cout << b << endl;
+                    }
+                }
+                else {
+                    cout << "Unknown command: " << commands[0] << endl;
+                    return 0;
+                }
+            }
+            else if (commands.size() == 1) {
+                if (command == "Print") {
+                    db.Print();
+                }
+                else {
+                    cout << "Unknown command: " << commands[0] << endl;
+                    return 0;
+                }
+            }
+            else if (commands.size() != 0) {
+                cout << "Unknown command: " << commands[0] << endl;
+                return 0;
+            }
+    }
+    return 0;
+}
