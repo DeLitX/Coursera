@@ -1,0 +1,81 @@
+class TeamTasks {
+public:
+    const TasksInfo& GetPersonTasksInfo(const string& person) const {
+        return persons.at(person);
+    }
+
+    void AddNewTask(const string& person) {
+        persons[person][TaskStatus::NEW]++;
+    }
+
+    tuple<TasksInfo, TasksInfo> PerformPersonTasks(
+        const string& person, int task_count) {
+        tuple<TasksInfo, TasksInfo> result;
+        TasksInfo tempArray = persons[person];
+        TasksInfo tempFirstPart;
+        TasksInfo tempSecondPart;
+        if (task_count - tempArray[TaskStatus::NEW] - tempArray[TaskStatus::IN_PROGRESS] > 0 && tempArray[TaskStatus::TESTING] != 0) {
+            int changingCount = task_count - tempArray[TaskStatus::NEW] - tempArray[TaskStatus::IN_PROGRESS];
+            if (changingCount >= tempArray[TaskStatus::TESTING]) {
+                changingCount = tempArray[TaskStatus::TESTING];
+                tempArray[TaskStatus::TESTING] = 0;
+            }
+            else {
+                tempSecondPart[TaskStatus::TESTING] = tempArray[TaskStatus::TESTING] - changingCount;
+                tempArray[TaskStatus::TESTING] -= changingCount;
+            }
+            tempFirstPart[TaskStatus::DONE] = changingCount;
+            tempArray[TaskStatus::DONE] += changingCount;
+        }
+        else if (tempArray[TaskStatus::TESTING] > 0) {
+            tempSecondPart[TaskStatus::TESTING] = tempArray[TaskStatus::TESTING];
+        }
+        if (task_count - tempArray[TaskStatus::NEW] > 0&&tempArray[TaskStatus::IN_PROGRESS]!=0) {
+            int changingCount = task_count - tempArray[TaskStatus::NEW];
+            if (changingCount >= tempArray[TaskStatus::IN_PROGRESS]) {
+                changingCount = tempArray[TaskStatus::IN_PROGRESS];
+                tempArray[TaskStatus::IN_PROGRESS] = 0;
+            }
+            else {
+                tempSecondPart[TaskStatus::IN_PROGRESS] = tempArray[TaskStatus::IN_PROGRESS] - changingCount;
+                tempArray[TaskStatus::IN_PROGRESS] -= changingCount;
+            }
+            tempFirstPart[TaskStatus::TESTING] = changingCount;
+            tempArray[TaskStatus::TESTING] += changingCount;
+        }
+        else if (tempArray[TaskStatus::IN_PROGRESS]> 0) {
+            tempSecondPart[TaskStatus::IN_PROGRESS] = tempArray[TaskStatus::IN_PROGRESS];
+        }
+        if (task_count > 0 && tempArray[TaskStatus::NEW] != 0) {
+            if (task_count >= tempArray[TaskStatus::NEW]) {
+                task_count = tempArray[TaskStatus::NEW];
+                tempArray[TaskStatus::NEW] = 0;
+            }
+            else {
+                tempSecondPart[TaskStatus::NEW] = tempArray[TaskStatus::NEW] - task_count;
+                tempArray[TaskStatus::NEW] -= task_count;
+            }
+            tempFirstPart[TaskStatus::IN_PROGRESS] = task_count;
+            tempArray[TaskStatus::IN_PROGRESS]+=task_count;
+        }
+        else if (tempArray[TaskStatus::NEW] > 0) {
+            tempSecondPart[TaskStatus::NEW] = tempArray[TaskStatus::NEW];
+        }
+        if (tempArray[TaskStatus::NEW] == 0) {
+            tempArray.erase(TaskStatus::NEW);
+        }
+        if (tempArray[TaskStatus::IN_PROGRESS] == 0) {
+            tempArray.erase(TaskStatus::IN_PROGRESS);
+        }
+        if (tempArray[TaskStatus::TESTING] == 0) {
+            tempArray.erase(TaskStatus::TESTING);
+        }
+        if (tempArray[TaskStatus::DONE] == 0) {
+            tempArray.erase(TaskStatus::DONE);
+        }
+        persons[person] = tempArray;
+        return tie(tempFirstPart, tempSecondPart);
+    }
+private:
+    map<string, TasksInfo> persons;
+};
