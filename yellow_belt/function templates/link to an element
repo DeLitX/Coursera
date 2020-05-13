@@ -1,0 +1,11 @@
+template<typename key, typename value>value& GetRefStrict(map<key, value>&, key);
+template<typename key, typename value>
+value& GetRefStrict(map<key, value>& m, key k) {
+	try {
+		value& response = m.at(k);
+	}
+	catch (exception e) {
+		throw runtime_error("");
+	}
+	return m[k];
+}
