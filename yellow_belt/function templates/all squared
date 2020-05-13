@@ -1,0 +1,28 @@
+template<typename T>vector<T> Sqr(vector<T> vector);
+template<typename T, typename key>map<key, T> Sqr(map<key, T> map);
+template<typename T, typename A>pair<T, A> Sqr(pair<T, A> pair);
+template<typename T>T Sqr(T temp);
+
+template<typename T>
+T Sqr(T temp) {
+	return temp * temp;
+}
+template<typename T,typename A>
+pair<T, A> Sqr(pair<T, A> p) {
+	return { Sqr(p.first), Sqr(p.second) };
+}
+template<typename T, typename key>
+map<key, T> Sqr(map<key, T> map) {
+	for (auto& i : map) {
+		i.second = Sqr(i.second);
+	}
+	return map;
+}
+
+template<typename T>
+vector<T> Sqr(vector<T> vector) {
+	for (auto& i : vector) {
+		i = Sqr(i);
+	}
+	return vector;
+}
