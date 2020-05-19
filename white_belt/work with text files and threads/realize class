@@ -1,0 +1,43 @@
+#include "phone_number.h"
+#include <exception>
+#include <ostream>
+#include <sstream>
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+PhoneNumber::PhoneNumber(const string& number) {
+    stringstream stream(number);
+    char temp;
+    stream >> temp;
+    if (temp != '+') {
+        throw invalid_argument("");
+    }
+    else {
+        string countryCode;
+        getline(stream, countryCode, '-');
+        string cityCode;
+        getline(stream, cityCode, '-');
+        string localCode;
+        stream >> localCode;
+        if (countryCode == "" || cityCode == "" || localCode == "") {
+            throw invalid_argument("");
+        }
+        country_code_ = countryCode;
+        city_code_ = cityCode;
+        local_number_ = localCode;
+    }
+}
+string PhoneNumber::GetCityCode()const {
+    return city_code_;
+}
+string PhoneNumber::GetCountryCode()const {
+    return country_code_;
+}
+string PhoneNumber::GetLocalNumber()const {
+    return local_number_;
+}
+string PhoneNumber::GetInternationalNumber()const {
+    return "+" + country_code_ + "-" + city_code_ + "-" + local_number_;
+}
