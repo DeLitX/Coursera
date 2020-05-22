@@ -8,21 +8,17 @@ template <typename RandomIt>
 void MergeSort(RandomIt range_begin, RandomIt range_end) {
     if (range_end - range_begin >= 2) {
         vector<typename RandomIt::value_type> elements(range_begin, range_end);
-        MergeSort(begin(elements), begin(elements) + (end(elements) - begin(elements)) / 3);
-        MergeSort(begin(elements) + (end(elements) - begin(elements)) / 3, begin(elements) + (end(elements) - begin(elements)) / 3 * 2);
+        int part = (end(elements) - begin(elements)) / 3;
+        MergeSort(begin(elements), begin(elements) + part);
+        MergeSort(begin(elements) + part, begin(elements) + part * 2);
         vector<typename RandomIt::value_type> temp;
-        merge(begin(elements), begin(elements) + (end(elements) - begin(elements)) / 3,
-            begin(elements) + (end(elements) - begin(elements)) / 3, begin(elements) + (end(elements) - begin(elements)) / 3 * 2,
+        merge(begin(elements), begin(elements) + part,
+            begin(elements) + part, begin(elements) + part * 2,
             back_inserter(temp)
         );
-        vector<typename RandomIt::value_type> result;
         merge(begin(temp), end(temp),
-            begin(elements) + (end(elements) - begin(elements)) / 3 * 2, end(elements),
-            back_inserter(result)
+            begin(elements) + part * 2, end(elements),
+            range_begin
         );
-        for (int i = 0; i < elements.size(); i++) {
-            *(range_begin + i) = result[i];
-        }
     }
-
 }
