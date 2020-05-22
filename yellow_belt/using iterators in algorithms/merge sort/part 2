@@ -11,6 +11,7 @@ void MergeSort(RandomIt range_begin, RandomIt range_end) {
         int part = (end(elements) - begin(elements)) / 3;
         MergeSort(begin(elements), begin(elements) + part);
         MergeSort(begin(elements) + part, begin(elements) + part * 2);
+        MergeSort(begin(elements) + part*2, end(elements));
         vector<typename RandomIt::value_type> temp;
         merge(begin(elements), begin(elements) + part,
             begin(elements) + part, begin(elements) + part * 2,
