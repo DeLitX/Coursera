@@ -1,0 +1,17 @@
+#include <vector>
+#include <algorithm>
+#include <set>
+#include <iostream>
+#include <string>
+using namespace std;
+template <typename T>
+vector<T> FindGreaterElements(const set<T>& elements, const T& border) {
+    vector<T> response;
+    for (const auto& t : elements) {
+        if (t > border) {
+            response.push_back(t);
+        }
+    }
+    sort(response.begin(), response.end());
+    return response;
+}
