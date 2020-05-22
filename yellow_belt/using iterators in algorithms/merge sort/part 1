@@ -7,10 +7,10 @@ using namespace std;
 template <typename RandomIt>
 void MergeSort(RandomIt range_begin, RandomIt range_end) {
     if (range_end - range_begin >= 2) {
-        vector<RandomIt::value_type> elements(range_begin, range_end);
+        vector<typename RandomIt::value_type> elements(range_begin, range_end);
         MergeSort(begin(elements), begin(elements) + (end(elements) - begin(elements)) / 2);
         MergeSort(begin(elements) + (end(elements) - begin(elements)) / 2, end(elements));
-        vector<RandomIt::value_type> result;
+        vector<typename RandomIt::value_type> result;
         merge(begin(elements), begin(elements) + (end(elements) - begin(elements)) / 2,
             begin(elements) + (end(elements) - begin(elements)) / 2, end(elements),
             back_inserter(result)
