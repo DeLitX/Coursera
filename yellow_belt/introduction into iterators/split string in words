@@ -1,0 +1,22 @@
+#include <vector>
+#include <algorithm>
+#include <set>
+#include <iostream>
+#include <string>
+using namespace std;
+vector<string> SplitIntoWords(const string& s) {
+    vector<string> result;
+    auto newBegin = s.begin();
+    while (newBegin != s.end()) {
+        auto tempBegin = find_if(newBegin, s.end(), [](const char& temp) {
+            return temp == ' ';
+            });
+        string temp(newBegin, tempBegin);
+        result.push_back(temp);
+        if (tempBegin == s.end()) {
+            break;
+        }
+        newBegin = tempBegin + 1;
+    }
+    return result;
+}
