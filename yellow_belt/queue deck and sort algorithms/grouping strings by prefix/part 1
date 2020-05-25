@@ -24,3 +24,11 @@ RandomIt findTopBound(RandomIt rangeBegin, RandomIt rangeEnd, char prefix) {
         return findTopBound(middle+1, rangeEnd, prefix);
     }
 }
+template <typename RandomIt>
+pair<RandomIt, RandomIt> FindStartsWith(
+    RandomIt range_begin, RandomIt range_end,
+    char prefix) {
+    RandomIt lowerBound = findBottomBound(range_begin, range_end, prefix);
+    RandomIt upperBound = findTopBound(range_begin, range_end, prefix);
+    return pair<RandomIt, RandomIt>(lowerBound, upperBound);
+}
