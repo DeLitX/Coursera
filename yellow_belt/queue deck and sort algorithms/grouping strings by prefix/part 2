@@ -1,64 +1,10 @@
-bool operator>(string a, string b) {
-    if (a.size()< b.size()) {
-        return false;
-    }
-    for (int i = 0; i < b.size(); i++) {
-        if (a[i] > b[i]) {
-            return true;
-        }
-        else if (a[i] < b[i]) {
-            return false;
-        }
-    }
-    return false;
-}
-bool operator<(string a, string b) {
-    if (a.size() < b.size()) {
-        return false;
-    }
-    for (int i = 0; i < b.size(); i++) {
-        if (a[i] < b[i]) {
-            return true;
-        }
-        else if (a[i] > b[i]) {
-            return false;
-        }
-    }
-    return false;
-}
-
-template<typename RandomIt>
-RandomIt findBottomBound(RandomIt rangeBegin,RandomIt rangeEnd, const string& prefix) {
-    if (rangeEnd - rangeBegin <= 0) {
-        return rangeBegin;
-    }
-    auto middle = rangeBegin + (rangeEnd - rangeBegin) / 2;
-    if (*middle < prefix) {
-        return findBottomBound(middle+1, rangeEnd, prefix);
-    }              
-    else {         
-        return findBottomBound(rangeBegin, middle, prefix);
-    }
-}
-template<typename RandomIt>
-RandomIt findTopBound(RandomIt rangeBegin, RandomIt rangeEnd, const string& prefix) {
-    if (rangeEnd - rangeBegin <= 0) {
-        return rangeEnd;
-    }
-    auto middle = rangeBegin + (rangeEnd - rangeBegin) / 2;
-    if (*middle > prefix) {
-        return findTopBound(rangeBegin, middle, prefix);
-    }
-    else {
-        return findTopBound(middle+1, rangeEnd, prefix);
-    }
-}
-
 template <typename RandomIt>
 pair<RandomIt, RandomIt> FindStartsWith(
     RandomIt range_begin, RandomIt range_end,
     const string& prefix) {
-    RandomIt lowerBound = findBottomBound(range_begin, range_end, prefix);
-    RandomIt upperBound = findTopBound(range_begin, range_end, prefix);
+    RandomIt lowerBound = lower_bound(range_begin, range_end, prefix);
+    auto temp = prefix;
+    temp[temp.size() - 1]++;
+    RandomIt upperBound = lower_bound(range_begin, range_end, temp);
     return pair<RandomIt, RandomIt>(lowerBound, upperBound);
 }
