@@ -1,0 +1,26 @@
+template<typename RandomIt>
+RandomIt findBottomBound(RandomIt rangeBegin,RandomIt rangeEnd, char prefix) {
+    if (rangeEnd - rangeBegin <= 0) {
+        return rangeBegin;
+    }
+    auto middle = rangeBegin + (rangeEnd - rangeBegin) / 2;
+    if ((*middle)[0] < prefix) {
+        return findBottomBound(middle+1, rangeEnd, prefix);
+    }              
+    else {         
+        return findBottomBound(rangeBegin, middle, prefix);
+    }
+}
+template<typename RandomIt>
+RandomIt findTopBound(RandomIt rangeBegin, RandomIt rangeEnd, char prefix) {
+    if (rangeEnd - rangeBegin <= 0) {
+        return rangeEnd;
+    }
+    auto middle = rangeBegin + (rangeEnd - rangeBegin) / 2;
+    if ((*middle)[0] > prefix) {
+        return findTopBound(rangeBegin, middle, prefix);
+    }
+    else {
+        return findTopBound(middle+1, rangeEnd, prefix);
+    }
+}
