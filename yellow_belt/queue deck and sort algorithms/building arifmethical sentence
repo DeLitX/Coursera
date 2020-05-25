@@ -3,24 +3,65 @@
 #include <set>
 #include <iostream>
 #include <string>
+#include <deque>
 using namespace std;
-string actionAdd(string previousString,int number) {
-    return "(" + previousString + ")" + " + " + to_string(number);
-}
-string actionMinus(string previousString, int number) {
-    return "(" + previousString + ")" + " - " + to_string(number);
-}
-string actionMultiple(string previousString, int number) {
-    return "(" + previousString + ")" + " * " + to_string(number);
-}
-string actionDivide(string previousString, int number) {
-    return "(" + previousString + ")" + " / " + to_string(number);
-}
 
-void workWithInput(int n) {
-    string result=to_string(n);
+int main() {
+    int n;
+    cin >> n;
+    deque<string> result;
+    result.push_back(to_string(n));
     int t;
     cin >> t;
+    int priorityLast = 2;
+    for (int i = 0; i < t; i++) {
+        char action;
+        cin >> action;
+        int number;
+        cin >> number;
+        result.push_front("(");
+        switch (action) {
+        case'+':
+            result.push_back(") + " + to_string(number));
+            break;
+        case'-':
+            result.push_back(") - " + to_string(number));
+            break;
+        case'*':
+            result.push_back(") * " + to_string(number));
+            break;
+        case'/':
+            result.push_back(") / " + to_string(number));
+            break;
+        }
+        
+    }
+    for (const string& a : result) {
+        cout << a;
+    }
+    return 0;
+}
+
+
+//
+//2
+//
+#include <vector>
+#include <algorithm>
+#include <set>
+#include <iostream>
+#include <string>
+#include <deque>
+using namespace std;
+
+int main() {
+    int n;
+    cin >> n;
+    deque<string> result;
+    result.push_back(to_string(n));
+    int t;
+    cin >> t;
+    int priorityLast = 2;
     for (int i = 0; i < t; i++) {
         char action;
         cin >> action;
@@ -28,25 +69,37 @@ void workWithInput(int n) {
         cin >> number;
         switch (action) {
         case '+':
-            result = actionAdd(result,number);
+            result .push_back(" + " + to_string(number));
+            priorityLast = 0;
             break;
         case'-':
-            result = actionMinus(result, number);
+            result.push_back(" - " + to_string(number));
+            priorityLast = 0;
             break;
         case'*':
-            result = actionMultiple(result, number);
+            if (priorityLast < 1) {
+                result.push_front("(");
+                result.push_back(") * " + to_string(number));
+            }
+            else {
+                result.push_back(" * " + to_string(number));
+            }
+            priorityLast = 1;
             break;
         case'/':
-            result = actionDivide(result, number);
+            if (priorityLast < 1) {
+                result.push_front("(");
+                result.push_back(") / " + to_string(number));
+            }
+            else {
+                result.push_back(" / " + to_string(number));
+            }
+            priorityLast = 1;
             break;
         }
     }
-    cout << result << endl;;
-}
-
-int main() {
-    int n;
-    cin >> n;
-    workWithInput(n);
+    for (const string& a : result) {
+        cout << a;
+    }
     return 0;
 }
