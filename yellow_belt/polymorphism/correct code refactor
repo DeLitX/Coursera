@@ -1,0 +1,97 @@
+#include <iostream>
+#include <string>
+#include <vector>
+
+using namespace std;
+class Human {
+public:
+    Human(string n, string t) :Name(n), Type(t) {
+
+    }
+    virtual void Walk(string destination) {
+        makeAction(" walks to: " + destination);
+    }
+    virtual void makeAction(string action) {
+        cout << Type << ": " << Name << action << endl;
+    }
+    string getType() const {
+        return Type;
+    }
+    string getName() const {
+        return Name;
+    }
+
+protected:
+    string Name;
+    string Type;
+};
+
+
+class Student :public Human {
+public:
+
+    Student(string name, string favouriteSong) :Human(name, "Student") {
+        FavouriteSong = favouriteSong;
+    }
+    void Walk(string destination)  override {
+        makeAction(" walks to: " + destination);
+        SingSong();
+    }
+
+    void Learn() {
+        makeAction(" learns");
+    }
+
+    void SingSong() {
+        makeAction(" sings a song: " + FavouriteSong);
+    }
+
+public:
+    string FavouriteSong;
+};
+
+
+class Teacher :public Human {
+public:
+
+    Teacher(string name, string subject) :Human(name, "Teacher") {
+        Subject = subject;
+    }
+
+    void Teach() {
+        makeAction(" teaches: " + Subject);
+    }
+
+public:
+    string Subject;
+};
+
+
+class Policeman :public Human {
+public:
+    Policeman(string name) :Human(name, "Policeman") {
+    }
+
+    void Check(Human h) {
+        makeAction(" checks " + h.getType() + "." + h.getType() + "'s name is: " + h.getName());
+    }
+};
+
+
+void VisitPlaces(Human& h, vector<string> places) {
+    for (const auto& p : places) {
+        h.Walk(p);
+    }
+}
+
+
+int main() {
+    Teacher t("Jim", "Math");
+    Student s("Ann", "We will rock you");
+    Policeman p("Bob");
+
+    VisitPlaces(t, { "Moscow", "London" });
+    p.Check(s);
+    VisitPlaces(s, { "Moscow", "London" });
+    return 0;
+}
